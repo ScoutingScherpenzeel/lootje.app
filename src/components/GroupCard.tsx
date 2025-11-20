@@ -9,6 +9,7 @@ import { Users, ArrowRight, Trash2, Loader2 } from "lucide-react";
 import type { groups } from "@/db/schema/schema";
 import { motion } from 'framer-motion';
 import DeleteGroupDialog from "@/components/DeleteGroupDialog";
+import Link from "next/link";
 
 const colors = ['bg-red-600', 'bg-green-700', 'bg-white', 'bg-red-600'];
 const rotations = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1'];
@@ -21,11 +22,10 @@ export type GroupWithCount = GroupRow & { participantCount?: number };
 type GroupCardProps = {
     group: GroupWithCount;
     participantCount?: number;
-    onView?: (group: GroupWithCount) => void;
     index?: number;
 };
 
-export default function GroupCard({ group, participantCount = 0, onView, index = 0 }: GroupCardProps) {
+export default function GroupCard({ group, participantCount = 0, index = 0 }: GroupCardProps) {
     const router = useRouter();
     const bgColor = colors[index % colors.length];
     const rotation = rotations[index % rotations.length];
@@ -74,7 +74,7 @@ export default function GroupCard({ group, participantCount = 0, onView, index =
                         <CardTitle className={`text-3xl font-black uppercase tracking-tight leading-tight ${isDark ? 'text-white' : 'text-black'}`}>
                             {group.name}
                         </CardTitle>
-                        <div className={`px-3 py-1 border-2 border-black text-xs font-black uppercase ${group.isDrawn
+                        <div className={`px-3 py-1 border-2 border-black text-xs font-black uppercase whitespace-nowrap ${group.isDrawn
                                 ? 'bg-green-400 text-black'
                                 : 'bg-white text-black'
                             }`}>
@@ -95,13 +95,13 @@ export default function GroupCard({ group, participantCount = 0, onView, index =
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Button
-                            onClick={() => onView?.(group)}
-                            className={`flex-1 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-900'} font-black uppercase border-4 border-black h-14 text-base shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all`}
+                        <Link
+                            href={`/trekking/${group.id}`}
+                            className={`flex h-14 flex-1 items-center justify-center gap-3 px-6 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-900'} font-black uppercase border-4 border-black text-base shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all rounded-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/30`}
                         >
-                            Bekijk
-                            <ArrowRight className="w-5 h-5 ml-auto" />
-                        </Button>
+                            <span>Bekijk</span>
+                            <ArrowRight className="w-5 h-5" />
+                        </Link>
                         <Button
                             type="button"
                             onClick={() => {
