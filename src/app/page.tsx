@@ -22,7 +22,7 @@ export default async function Home() {
 
   return (
     <div className="">
-      <Hero name="Melvin" />
+      <Hero name={session.user.name} />
 
       <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
