@@ -277,7 +277,7 @@ export default function ParticipantsList({
                           </div>
                           <div className="flex-1 space-y-1">
                             <p className="text-2xl font-black uppercase tracking-tight">{participant.name}</p>
-                            {participant.assignedParticipantName ? (
+                            
                               <AnimatePresence mode="wait" initial={false}>
                                 {showAssignments ? (
                                   <motion.p
@@ -295,11 +295,7 @@ export default function ParticipantsList({
                                   </motion.p>
                                 ) : null}
                               </AnimatePresence>
-                            ) : (
-                              <p className="text-xs font-semibold uppercase text-black/40">
-                                {canEdit ? "Nog geen match — wacht tot de loting" : "Geen toewijzing gevonden"}
-                              </p>
-                            )}
+                            
                           </div>
                         </div>
 
