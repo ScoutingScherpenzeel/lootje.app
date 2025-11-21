@@ -2,7 +2,7 @@
 
 import {revalidatePath} from "next/cache";
 import {headers} from "next/headers";
-import {and, eq} from "drizzle-orm";
+import {and, desc, eq} from "drizzle-orm";
 import {db} from "@/db";
 import {groups} from "@/db/schema/schema";
 import {auth} from "@/lib/auth";
@@ -22,6 +22,7 @@ export const getGroupsForUser = async (userId: string) => {
                 },
             },
         },
+        orderBy: (group) => [desc(group.createdAt)],
     });
 
     return groupsWithParticipants.map(({participants, ...group}) => ({
