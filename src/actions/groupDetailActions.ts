@@ -313,6 +313,27 @@ export async function getParticipantReveal(token: string) {
 }
 
 /**
+ * Sets the viewedAt timestamp for a participant.
+ * @param token The token of the participant to mark as viewed.
+ */
+export async function markParticipantAsViewed(token: string) {
+
+    if (!token) {
+        return;
+    }
+
+    const now = new Date();
+    await db
+        .update(participants)
+        .set({
+            viewedAt: now,
+            updatedAt: now,
+        })
+        .where(eq(participants.viewToken, token));
+}
+
+
+/**
  * Shuffles an array using the Fisher-Yates algorithm.
  * @param items The array to shuffle.
  * @returns A new array with the items shuffled.

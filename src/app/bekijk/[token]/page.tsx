@@ -16,7 +16,7 @@ type PageProps = {
 type ParticipantRevealRecord = Awaited<ReturnType<typeof getParticipantReveal>>;
 
 
-function toViewProps(record: ParticipantRevealRecord): ParticipantRevealViewProps {
+function toViewProps(record: ParticipantRevealRecord, token: string): ParticipantRevealViewProps {
     if (!record) {
         return {status: "invalid"};
     }
@@ -37,18 +37,19 @@ function toViewProps(record: ParticipantRevealRecord): ParticipantRevealViewProp
         participantName: record.name,
         assignedParticipantName: record.assignedParticipant.name,
         groupName,
+        token
     };
 }
 
 export default async function ParticipantRevealPage({params}: PageProps) {
     const {token} = await params;
     const record = await getParticipantReveal(token);
-    const viewProps = toViewProps(record);
+    const viewProps = toViewProps(record, token);
 
     return (
         <>
             <HideFooterOnMount />
-            <DeelnemerView {...viewProps} />
+            <DeelnemerView {...viewProps}  />
         </>
     );
 }

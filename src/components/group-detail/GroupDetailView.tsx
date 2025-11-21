@@ -22,6 +22,7 @@ import {
     removeParticipant,
     type GroupDetailPayload,
 } from "@/actions/groupDetailActions";
+import StatusChip from "@/components/StatusChip";
 
 type GroupDetailViewProps = GroupDetailPayload;
 
@@ -88,7 +89,7 @@ export default function GroupDetailView({ group, participants }: GroupDetailView
                             </Link>
                         </Button>
 
-                        <div className="flex flex-wrap items-center gap-3 justify-self-end text-xs font-black uppercase">
+                        <div className="flex flex-wrap items-center gap-3 justify-self-end">
                             <StatusChip icon={<Users className="h-4 w-4" />}>
                                 {participantCount} {participantCount === 1 ? "deelnemer" : "deelnemers"}
                             </StatusChip>
@@ -255,26 +256,7 @@ function StatusBanner({ isDrawn, participantCount, participantsNeeded }: StatusB
     );
 }
 
-type StatusChipProps = {
-    children: React.ReactNode;
-    icon?: React.ReactNode;
-    tone?: "plain" | "success" | "neutral";
-};
 
-function StatusChip({ children, icon, tone = "neutral" }: StatusChipProps) {
-    const toneClasses = {
-        neutral: "bg-black text-white",
-        success: "bg-green-400 text-black",
-        plain: "bg-white text-black",
-    }[tone];
-
-    return (
-        <span className={`inline-flex items-center gap-2 border-4 border-black px-3 py-1 ${toneClasses}`}>
-            {icon}
-            {children}
-        </span>
-    );
-}
 
 type StatRowProps = {
     label: string;

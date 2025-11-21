@@ -5,6 +5,7 @@ import Snowfall from "react-snowfall";
 import {AnimatePresence, motion} from "motion/react";
 import {AlertCircle, Lock, Sparkles, Unlock} from "lucide-react";
 import {Button} from "@/components/ui/button";
+import {markParticipantAsViewed} from "@/actions/groupDetailActions";
 
 export type ParticipantRevealViewProps =
     | { status: "invalid" }
@@ -14,6 +15,7 @@ export type ParticipantRevealViewProps =
     participantName: string;
     assignedParticipantName: string;
     groupName: string | null;
+    token: string;
 };
 
 export default function DeelnemerView(props: ParticipantRevealViewProps) {
@@ -51,8 +53,13 @@ export default function DeelnemerView(props: ParticipantRevealViewProps) {
 
 type RevealExperienceProps = Extract<ParticipantRevealViewProps, { status: "ready" }>;
 
-function RevealExperience({participantName, assignedParticipantName, groupName}: RevealExperienceProps) {
+function RevealExperience({participantName, assignedParticipantName, groupName, token}: RevealExperienceProps) {
     const [revealed, setRevealed] = useState(false);
+
+    async function reveal() {
+        setRevealed(true);
+        await markParticipantAsViewed(token);
+    }
 
     return (
         <RevealShell>
@@ -136,7 +143,7 @@ function RevealExperience({participantName, assignedParticipantName, groupName}:
                                         </p>
                                     </div>
                                     <Button
-                                        onClick={() => setRevealed(true)}
+                                        onClick={reveal}
                                         className="group inline-flex items-center gap-3 border-8 border-black bg-red-600 px-12 py-6 text-xl font-black uppercase tracking-wide text-white shadow-[12px_12px_0px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-1 hover:shadow-[16px_16px_0px_rgba(0,0,0,0.35)]"
                                         size="lg"
                                     >
