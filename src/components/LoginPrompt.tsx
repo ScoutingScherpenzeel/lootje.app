@@ -82,16 +82,16 @@ export default function LoginPrompt({ className, methods = defaultMethods, showB
                 onClick={() => handleSignIn(method.provider, method.disabled)}
                 disabled={method.disabled || Boolean(activeProvider && !isLoading)}
                 className={cn(
-                  "flex h-20 w-full items-center gap-6 rounded-3xl border-4 border-black px-6 text-left text-lg font-black uppercase tracking-wide shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 ease-out hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
+                  "flex h-20 w-full items-center rounded-3xl border-4 border-black px-6 text-left text-lg font-black uppercase shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 ease-out hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]",
                   accentClass,
                   method.disabled
                     ? "cursor-not-allowed opacity-60 hover:translate-x-0 hover:translate-y-0 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]"
                     : "",
                 )}
               >
-                <span className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-black bg-white/70 text-2xl">
-                  {method.icon ?? <Sparkles className="h-6 w-6 text-black" />}
-                </span>
+                    {/* <span className="flex h-14 w-14 items-center justify-center rounded-full border-4 border-black bg-white/70 text-2xl">
+                        {method.icon ?? <Sparkles className="h-6 w-6 text-black" />}
+                    </span> */}
                 <span className="flex-1 text-left text-lg font-black uppercase leading-tight text-black">
                   {method.label}
                 </span>
