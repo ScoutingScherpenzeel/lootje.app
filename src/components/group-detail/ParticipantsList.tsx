@@ -5,9 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { GroupDetailParticipant } from "@/actions/groupDetailActions";
-import { Copy, ExternalLink, Loader2, Trash2, UserPlus2 } from "lucide-react";
+import { Copy, ExternalLink, Eye, EyeOff, Loader2, Trash2, UserPlus2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ParticipantListProps {
   participants: GroupDetailParticipant[];
@@ -32,10 +40,14 @@ export default function ParticipantsList({
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [copiedParticipantId, setCopiedParticipantId] = useState<string | null>(null);
   const [shareOrigin, setShareOrigin] = useState<string | null>(null);
+  const [showAssignments, setShowAssignments] = useState(false);
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [pendingVisibility, setPendingVisibility] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previousCountRef = useRef<number>(participants.length);
 
   const canEdit = !isDrawn;
+  const hasAssignments = participants.some((participant) => Boolean(participant.assignedParticipantName));
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -149,9 +161,25 @@ export default function ParticipantsList({
             <h2 className="text-4xl font-black uppercase leading-none tracking-tight">
               Bouw je lijst
             </h2>
-            <p className="text-xs font-semibold uppercase text-black/60">
-              {participants.length} {participants.length === 1 ? "persoon" : "personen"} aangemeld
-            </p>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-xs font-semibold uppercase text-black/60">
+                {participants.length} {participants.length === 1 ? "persoon" : "personen"} aangemeld
+              </p>
+              {hasAssignments ? (
+                <Button
+                  type="button"
+                  onClick={() => {
+                    const nextVisibility = !showAssignments;
+                    setPendingVisibility(nextVisibility);
+                    setConfirmDialogOpen(true);
+                  }}
+                  className="flex h-10 w-full items-center justify-center gap-2 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] sm:w-auto"
+                >
+                  {showAssignments ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showAssignments ? "Verberg lootjes" : "Toon lootjes"}
+                </Button>
+              ) : null}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3 lg:flex-row lg:items-end">
@@ -250,14 +278,23 @@ export default function ParticipantsList({
                           <div className="flex-1 space-y-1">
                             <p className="text-2xl font-black uppercase tracking-tight">{participant.name}</p>
                             {participant.assignedParticipantName ? (
-                              <p
-                                className={cn(
-                                  "text-xs font-semibold uppercase",
-                                  canEdit ? "text-black/60" : "text-black/70",
-                                )}
-                              >
-                                ↦ Geeft aan {participant.assignedParticipantName}
-                              </p>
+                              <AnimatePresence mode="wait" initial={false}>
+                                {showAssignments ? (
+                                  <motion.p
+                                    key="assignment"
+                                    initial={{ opacity: 0, y: -6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 6 }}
+                                    transition={{ duration: 0.2 }}
+                                    className={cn(
+                                      "text-xs font-semibold uppercase",
+                                      canEdit ? "text-black/60" : "text-black/70",
+                                    )}
+                                  >
+                                    ↦ Geeft aan {participant.assignedParticipantName}
+                                  </motion.p>
+                                ) : null}
+                              </AnimatePresence>
                             ) : (
                               <p className="text-xs font-semibold uppercase text-black/40">
                                 {canEdit ? "Nog geen match — wacht tot de loting" : "Geen toewijzing gevonden"}
@@ -314,6 +351,48 @@ export default function ParticipantsList({
 
         {listError ? <p className="text-sm font-semibold text-red-600">{listError}</p> : null}
       </div>
+
+      <Dialog
+        open={confirmDialogOpen}
+        onOpenChange={(open) => {
+          setConfirmDialogOpen(open);
+        }}
+      >
+        <DialogContent className="border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" showCloseButton={false}>
+          <DialogHeader className="space-y-3">
+            <DialogTitle className="text-2xl font-black uppercase">
+              {pendingVisibility ? "Lootjes tonen?" : "Lootjes verbergen?"}
+            </DialogTitle>
+            <DialogDescription className="text-sm font-semibold uppercase text-black/60">
+              {pendingVisibility
+                ? "Je staat op het punt om alle lootjes voor jezelf zichtbaar te maken, weet je het zeker?"
+                : "Je kunt altijd later weer kiezen om de lootjes te tonen."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setConfirmDialogOpen(false);
+              }}
+              className="h-10 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
+            >
+              Annuleer
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setShowAssignments(pendingVisibility);
+                setConfirmDialogOpen(false);
+              }}
+              className="h-10 border-4 border-black bg-black font-black uppercase text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-gray-900 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
+            >
+              Bevestig
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

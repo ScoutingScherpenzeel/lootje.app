@@ -13,7 +13,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const colors = ['bg-red-600', 'bg-green-700', 'bg-white', 'bg-red-600'];
-const rotations = ['sm:rotate-1', 'sm:-rotate-2', 'sm:rotate-2', 'sm:-rotate-1'];
+const rotations = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1'];
 const emojis = ['🎄', '⛄', '🎅', '⭐'];
 
 type GroupRow = typeof groups.$inferSelect;

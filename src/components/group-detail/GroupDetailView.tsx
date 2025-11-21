@@ -73,7 +73,7 @@ export default function GroupDetailView({ group, participants }: GroupDetailView
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="relative overflow-hidden border-8 border-red-500 bg-white px-8 py-10 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] -rotate-1 -translate-x-1"
+                    className="relative overflow-hidden border-8 border-red-500 bg-white px-8 py-10 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] -rotate-1 -translate-x-1 rounded-md"
                 >
 
                     <div className="relative z-10 grid gap-8 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center">
@@ -184,7 +184,7 @@ export default function GroupDetailView({ group, participants }: GroupDetailView
                                         <Button
                                             onClick={handleDrawGroup}
                                             disabled={!canDraw || isDrawing}
-                                            className="h-14 w-full border-4 border-black bg-black text-lg font-black uppercase text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-70"
+                                            className="h-14 w-full border-4 border-black bg-white text-lg font-black uppercase hover:text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:bg-black text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-70"
                                         >
                                             {isDrawing ? (
                                                 <>
@@ -232,7 +232,7 @@ function StatusBanner({ isDrawn, participantCount, participantsNeeded }: StatusB
 
     if (participantCount >= 3) {
         return (
-            <div className="flex items-center gap-4 border-8 border-black bg-blue-400 px-5 py-4 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-md">
+            <div className="flex items-center gap-4 border-8 border-black bg-orange-400 px-5 py-4 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-md">
                 <div className="flex p-2 items-center justify-center border-4 border-black bg-white">
                     <CheckCircle className="h-6 w-6 text-black" />
                 </div>
@@ -245,7 +245,7 @@ function StatusBanner({ isDrawn, participantCount, participantsNeeded }: StatusB
 
     return (
         <div className="flex items-center gap-4 border-8 border-black bg-red-600 px-5 py-4 text-white shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] rounded-md">
-            <div className="flex p-1 items-center justify-center border-4 border-black bg-white text-red-600">
+            <div className="flex p-2 items-center justify-center border-4 border-black bg-white text-red-600">
                 <AlertCircle className="h-6 w-6" />
             </div>
             <p className="text-sm font-black uppercase leading-snug">
