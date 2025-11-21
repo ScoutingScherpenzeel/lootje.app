@@ -159,7 +159,7 @@ export default function ParticipantsList({
       const rows = participants.map((participant, index) => ({
         Nummer: index + 1,
         Deelnemer: participant.name,
-        "Geeft aan": participant.assignedParticipantName ?? "",
+        "Heeft getrokken": participant.assignedParticipantName ?? "",
         "Persoonlijke link": buildShareUrl(participant.viewToken),
       }));
 
@@ -335,7 +335,7 @@ export default function ParticipantsList({
                                       canEdit ? "text-black/60" : "text-black/70",
                                     )}
                                   >
-                                    ↦ Geeft aan {participant.assignedParticipantName}
+                                    ↦ Heeft getrokken: {participant.assignedParticipantName}
                                   </motion.p>
                                 ) : null}
                               </AnimatePresence>
