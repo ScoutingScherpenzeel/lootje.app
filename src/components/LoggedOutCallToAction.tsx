@@ -13,7 +13,7 @@ export default function LoggedOutCallToAction() {
  
   return (
     <>
-  <section className="relative overflow-hidden border-8 border-black bg-linear-to-br from-yellow-200 via-orange-200 to-pink-200 px-10 py-16 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+  <section className="rounded-md relative overflow-hidden border-8 border-black bg-linear-to-br from-yellow-200 via-orange-200 to-pink-200 px-10 py-16 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
         <div className="pointer-events-none absolute inset-0 opacity-15">
           <div className="absolute left-8 top-8 h-32 w-32 rounded-full border-4 border-black/40 bg-white/50" />
           <div className="absolute bottom-12 right-12 h-40 w-40 rotate-6 border-8 border-black/30 bg-green-400/50" />
