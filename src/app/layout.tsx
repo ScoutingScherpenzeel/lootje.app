@@ -4,7 +4,7 @@ import Snowfall from "@/components/Snowfall";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "Lootjes trekken",
+  title: "lootje.app – Eenvoudig lootjes trekken",
   description: "Lootjes trekken, zonder poespas.",
 };
 
@@ -14,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="nl">
       <body
         className={`antialiased min-h-screen bg-white relative`}
       >
