@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { GroupDetailParticipant } from "@/actions/groupDetailActions";
-import { Copy, ExternalLink, Eye, EyeOff, Loader2, Trash2, UserPlus2 } from "lucide-react";
+import { Copy, Download, ExternalLink, Eye, EyeOff, Loader2, Trash2, UserPlus2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -43,6 +43,7 @@ export default function ParticipantsList({
   const [showAssignments, setShowAssignments] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [pendingVisibility, setPendingVisibility] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const previousCountRef = useRef<number>(participants.length);
 
@@ -145,6 +146,36 @@ export default function ParticipantsList({
     }
   };
 
+  const handleExportToExcel = async () => {
+    if (isExporting) {
+      return;
+    }
+
+    setListError(null);
+    setIsExporting(true);
+
+    try {
+      const XLSX = await import("xlsx");
+      const rows = participants.map((participant, index) => ({
+        Nummer: index + 1,
+        Deelnemer: participant.name,
+        "Geeft aan": participant.assignedParticipantName ?? "",
+        "Persoonlijke link": buildShareUrl(participant.viewToken),
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(rows);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Lootjes");
+
+      const timestamp = new Date().toISOString().slice(0, 10);
+      XLSX.writeFile(workbook, `lootjes-${timestamp}.xlsx`, { bookType: "xlsx" });
+    } catch (error) {
+      setListError(error instanceof Error ? error.message : "Kon lootjes niet exporteren.");
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -166,18 +197,31 @@ export default function ParticipantsList({
                 {participants.length} {participants.length === 1 ? "persoon" : "personen"} aangemeld
               </p>
               {hasAssignments ? (
-                <Button
-                  type="button"
-                  onClick={() => {
-                    const nextVisibility = !showAssignments;
-                    setPendingVisibility(nextVisibility);
-                    setConfirmDialogOpen(true);
-                  }}
-                  className="flex h-10 w-full items-center justify-center gap-2 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] sm:w-auto"
-                >
-                  {showAssignments ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  {showAssignments ? "Verberg lootjes" : "Toon lootjes"}
-                </Button>
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      const nextVisibility = !showAssignments;
+                      setPendingVisibility(nextVisibility);
+                      setConfirmDialogOpen(true);
+                    }}
+                    className="flex h-10 w-full items-center justify-center gap-2 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] sm:w-auto"
+                  >
+                    {showAssignments ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showAssignments ? "Verberg lootjes" : "Toon lootjes"}
+                  </Button>
+                  {!canEdit ? (
+                    <Button
+                      type="button"
+                      onClick={handleExportToExcel}
+                      disabled={isExporting}
+                      className="flex h-10 w-full items-center justify-center gap-2 border-4 border-black bg-green-400 font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-green-300 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] sm:w-auto"
+                    >
+                      {isExporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+                      {isExporting ? "Bezig..." : "Exporteer lootjes"}
+                    </Button>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           </div>
@@ -277,7 +321,7 @@ export default function ParticipantsList({
                           </div>
                           <div className="flex-1 space-y-1">
                             <p className="text-2xl font-black uppercase tracking-tight">{participant.name}</p>
-                            
+                            {participant.assignedParticipantName ? (
                               <AnimatePresence mode="wait" initial={false}>
                                 {showAssignments ? (
                                   <motion.p
@@ -295,7 +339,11 @@ export default function ParticipantsList({
                                   </motion.p>
                                 ) : null}
                               </AnimatePresence>
-                            
+                            ) : (
+                              <p className="text-xs font-semibold uppercase text-black/40">
+                                {canEdit ? "Nog geen match — wacht tot de loting" : "Geen toewijzing gevonden"}
+                              </p>
+                            )}
                           </div>
                         </div>
 
