@@ -226,31 +226,32 @@ export default function ParticipantsList({
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3 lg:flex-row lg:items-end">
-            <div className="flex flex-1 flex-col gap-2">
-              <Label htmlFor="participant-name" className="text-xs font-black uppercase">
-                Naam toevoegen
-              </Label>
-              <Input
-                id="participant-name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                disabled={!canEdit || isAdding}
-                placeholder="Bijv. Sara"
-                ref={inputRef}
-                className="h-12 w-full border-4 border-black bg-white text-base font-semibold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0"
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={!canEdit || isAdding}
-              className="h-12 gap-2 border-4 border-black bg-black font-black uppercase text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-gray-900 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] lg:w-auto"
-            >
-              {isAdding ? <Loader2 className="mr-1 h-5 w-5 animate-spin" /> : <UserPlus2 className="mr-1 h-5 w-5" />}
-              Toevoegen
-            </Button>
-            {formError ? <p className="text-sm font-semibold text-red-600">{formError}</p> : null}
-          </form>
+          {!canEdit ? null : (
+            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3 lg:flex-row lg:items-end">
+              <div className="flex flex-1 flex-col gap-2">
+                <Label htmlFor="participant-name" className="text-xs font-black uppercase">
+                  Naam toevoegen
+                </Label>
+                <Input
+                  id="participant-name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  disabled={isAdding}
+                  placeholder="Bijv. Sara"
+                  ref={inputRef}
+                  className="h-12 w-full border-4 border-black bg-white text-base font-semibold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isAdding}
+                className="h-12 gap-2 border-4 border-black bg-black font-black uppercase text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-gray-900 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] lg:w-auto"
+              >
+                {isAdding ? <Loader2 className="mr-1 h-5 w-5 animate-spin" /> : <UserPlus2 className="mr-1 h-5 w-5" />}
+                Toevoegen
+              </Button>
+              {formError ? <p className="text-sm font-semibold text-red-600">{formError}</p> : null}
+            </form>)}
         </div>
 
         <div className="space-y-3">
@@ -321,25 +322,25 @@ export default function ParticipantsList({
                           </div>
                           <div className="flex-1 space-y-1">
                             <p className="text-2xl font-black uppercase tracking-tight">{participant.name}</p>
-                        
-                              <AnimatePresence mode="wait" initial={false}>
-                                {showAssignments ? (
-                                  <motion.p
-                                    key="assignment"
-                                    initial={{ opacity: 0, y: -6 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: 6 }}
-                                    transition={{ duration: 0.2 }}
-                                    className={cn(
-                                      "text-xs font-semibold uppercase",
-                                      canEdit ? "text-black/60" : "text-black/70",
-                                    )}
-                                  >
-                                    ↦ Heeft getrokken: {participant.assignedParticipantName}
-                                  </motion.p>
-                                ) : null}
-                              </AnimatePresence>
-                            
+
+                            <AnimatePresence mode="wait" initial={false}>
+                              {showAssignments ? (
+                                <motion.p
+                                  key="assignment"
+                                  initial={{ opacity: 0, y: -6 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  exit={{ opacity: 0, y: 6 }}
+                                  transition={{ duration: 0.2 }}
+                                  className={cn(
+                                    "text-xs font-semibold uppercase",
+                                    canEdit ? "text-black/60" : "text-black/70",
+                                  )}
+                                >
+                                  ↦ Heeft getrokken: {participant.assignedParticipantName}
+                                </motion.p>
+                              ) : null}
+                            </AnimatePresence>
+
                           </div>
                         </div>
 
