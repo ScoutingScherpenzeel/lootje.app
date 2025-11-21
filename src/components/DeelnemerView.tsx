@@ -87,15 +87,16 @@ function RevealExperience({participantName, assignedParticipantName, groupName}:
                     </motion.div>
 
                     <div className="mt-6 space-y-3">
-                        <motion.p
-                            initial={{opacity: 0, y: 12}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{delay: 0.2}}
-                            className="inline-flex items-center gap-3 text-black border-4 border-black bg-yellow-300 px-4 py-2 text-xs font-black uppercase tracking-[0.4em]"
-                        >
-                            Lootje trekken
-                        </motion.p>
-
+                        {groupName ? (
+                            <motion.p
+                                initial={{ opacity: 0, y: 14 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="inline-block rounded-md border-4 border-black bg-green-600 px-6 py-3 text-lg font-black uppercase tracking-wide text-white"
+                            >
+                                🎄 {groupName}
+                            </motion.p>
+                        ) : null}
                         <motion.h1
                             initial={{opacity: 0, y: 14}}
                             animate={{opacity: 1, y: 0}}
@@ -104,17 +105,6 @@ function RevealExperience({participantName, assignedParticipantName, groupName}:
                         >
                             Hoi, {participantName}!
                         </motion.h1>
-
-                        {groupName ? (
-                            <motion.p
-                                initial={{opacity: 0, y: 14}}
-                                animate={{opacity: 1, y: 0}}
-                                transition={{delay: 0.3}}
-                                className="inline-block rounded-md border-4 border-black bg-green-600 px-6 py-3 text-lg font-black uppercase tracking-wide text-white"
-                            >
-                                🎄 {groupName}
-                            </motion.p>
-                        ) : null}
                     </div>
 
                     <motion.div
@@ -134,8 +124,8 @@ function RevealExperience({participantName, assignedParticipantName, groupName}:
                                     className="space-y-8"
                                 >
                                     <div
-                                        className="mx-auto flex h-50 w-50 items-center justify-center rounded-full border-8 border-yellow-400 bg-black">
-                                        <Lock className="h-20 w-20 text-yellow-300"/>
+                                        className="mx-auto flex h-30 w-30 md:h-50 md:w-50 p-5 md:p-10 items-center justify-center rounded-full border-8 border-yellow-400 bg-black">
+                                        <Lock className="text-yellow-300 w-full h-full"/>
                                     </div>
                                     <div className="space-y-4">
                                         <h2 className="text-3xl font-black uppercase leading-tight sm:text-4xl text-black text-balance">
