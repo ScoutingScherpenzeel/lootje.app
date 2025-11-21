@@ -3,6 +3,7 @@ import "./globals.css";
 import Snowfall from "@/components/Snowfall";
 import SiteFooter from "@/components/SiteFooter";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata: Metadata = {
   title: "lootje.app – Eenvoudig lootjes trekken",
   description: "Lootjes trekken, zonder poespas.",
@@ -24,6 +25,7 @@ export default function RootLayout({
           <SiteFooter />
         </div>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
