@@ -3,6 +3,7 @@ import DeelnemerView, {
 } from "@/components/DeelnemerView";
 import {getParticipantReveal} from "@/actions/groupDetailActions";
 import HideFooterOnMount from "@/components/HideFooterOnMount";
+import type { Metadata } from 'next'
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -15,6 +16,10 @@ type PageProps = {
 
 type ParticipantRevealRecord = Awaited<ReturnType<typeof getParticipantReveal>>;
 
+export const metadata: Metadata = {
+    title: 'Bekijk jouw lootje!',
+    description: 'Benieuwd wie jij getrokken hebt? Bekijk het hier met jouw unieke link. Ssst... bewaar dit geheim goed!',
+}
 
 function toViewProps(record: ParticipantRevealRecord, token: string): ParticipantRevealViewProps {
     if (!record) {
