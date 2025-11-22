@@ -145,7 +145,7 @@ function RevealExperience({participantName, assignedParticipantName, groupName, 
                                     </div>
                                     <Button
                                         onClick={reveal}
-                                        className="group inline-flex items-center gap-3 border-8 border-black bg-red-600 px-12 py-6 text-xl font-black uppercase tracking-wide text-white shadow-[12px_12px_0px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-1 hover:shadow-[16px_16px_0px_rgba(0,0,0,0.35)]"
+                                        className="group !text-wrap inline-flex items-center gap-3 border-8 border-black bg-red-600 px-12 py-8 sm:py-6 font-black uppercase tracking-wide text-white shadow-[12px_12px_0px_rgba(0,0,0,0.5)] transition-all hover:-translate-y-1 hover:shadow-[16px_16px_0px_rgba(0,0,0,0.35)]"
                                         size="lg"
                                     >
                                         <Unlock className="h-6 w-6 transition-transform group-hover:rotate-12"/>
