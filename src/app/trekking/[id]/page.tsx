@@ -19,15 +19,17 @@ export default async function Page({ params }: PageProps) {
     redirect("/login");
   }
 
-  const { id } = await params
+  const { id } = await params;
 
   console.log("Fetching details for group ID:", id);
-  
+
   const detail = await getGroupDetail(id);
 
   if (!detail) {
     notFound();
   }
 
-  return <GroupDetailView group={detail.group} participants={detail.participants} />;
+  return (
+    <GroupDetailView group={detail.group} participants={detail.participants} />
+  );
 }

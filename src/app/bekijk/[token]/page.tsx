@@ -1,60 +1,64 @@
 import DeelnemerView, {
-    type ParticipantRevealViewProps,
+  type ParticipantRevealViewProps,
 } from "@/components/DeelnemerView";
-import {getParticipantReveal} from "@/actions/groupDetailActions";
+import { getParticipantReveal } from "@/actions/groupDetailActions";
 import HideFooterOnMount from "@/components/HideFooterOnMount";
-import type { Metadata } from 'next'
+import type { Metadata } from "next";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 type PageProps = {
-    params: {
-        token: string;
-    };
+  params: {
+    token: string;
+  };
 };
 
 type ParticipantRevealRecord = Awaited<ReturnType<typeof getParticipantReveal>>;
 
 export const metadata: Metadata = {
-    title: 'Bekijk jouw lootje!',
-    description: 'Benieuwd wie jij getrokken hebt? Bekijk het hier met jouw unieke link. Ssst... bewaar dit geheim goed!',
-}
+  title: "Bekijk jouw lootje!",
+  description:
+    "Benieuwd wie jij getrokken hebt? Bekijk het hier met jouw unieke link. Ssst... bewaar dit geheim goed!",
+};
 
-function toViewProps(record: ParticipantRevealRecord, token: string): ParticipantRevealViewProps {
-    if (!record) {
-        return {status: "invalid"};
-    }
+function toViewProps(
+  record: ParticipantRevealRecord,
+  token: string,
+): ParticipantRevealViewProps {
+  if (!record) {
+    return { status: "invalid" };
+  }
 
-    const groupName = record.group?.name ?? null;
-    const isDrawn = record.group?.isDrawn ?? false;
+  const groupName = record.group?.name ?? null;
+  const isDrawn = record.group?.isDrawn ?? false;
 
-    if (!isDrawn || !record.assignedParticipant) {
-        return {
-            status: "not-drawn",
-            participantName: record.name,
-            groupName,
-        };
-    }
-
+  if (!isDrawn || !record.assignedParticipant) {
     return {
-        status: "ready",
-        participantName: record.name,
-        assignedParticipantName: record.assignedParticipant.name,
-        groupName,
-        token
+      status: "not-drawn",
+      participantName: record.name,
+      groupName,
     };
+  }
+
+  return {
+    status: "ready",
+    participantName: record.name,
+    assignedParticipantName: record.assignedParticipant.name,
+    groupName,
+    token,
+  };
 }
 
-export default async function ParticipantRevealPage({params}: PageProps) {
-    const {token} = await params;
-    const record = await getParticipantReveal(token);
-    const viewProps = toViewProps(record, token);
+export default async function ParticipantRevealPage({ params }: PageProps) {
+  const { token } = await params;
+  const record = await getParticipantReveal(token);
+  const viewProps = toViewProps(record, token);
 
-    return (
-        <>
-            <HideFooterOnMount />
-            <DeelnemerView {...viewProps}  />
-        </>
-    );
+  return (
+    <>
+      <HideFooterOnMount />
+      <DeelnemerView {...viewProps} />
+    </>
+  );
 }
