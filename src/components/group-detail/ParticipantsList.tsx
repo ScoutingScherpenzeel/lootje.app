@@ -1,11 +1,10 @@
 "use client";
 
 import {useEffect, useRef, useState, useTransition} from "react";
-import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {Label} from "@/components/ui/label";
 import type {GroupDetailParticipant} from "@/actions/groupDetailActions";
-import {CheckIcon, Copy, Download, ExternalLink, Eye, EyeOff, Loader2, Sparkles, Trash2, UserPlus2} from "lucide-react";
+import {CheckIcon, Copy, Download, ExternalLink, Eye, EyeOff, Loader2, Trash2, UserPlus2} from "lucide-react";
 import {cn} from "@/lib/utils";
 import {AnimatePresence, motion} from "motion/react";
 import {
@@ -17,6 +16,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 interface ParticipantListProps {
     participants: GroupDetailParticipant[];
@@ -155,6 +156,9 @@ export default function ParticipantsList({
         setListError(null);
         setIsExporting(true);
 
+        // Delay to allow button state to update (better feeling app)
+        await new Promise(r => setTimeout(r, 500));
+
         try {
             const XLSX = await import("xlsx");
             const rows = participants.map((participant, index) => ({
@@ -199,30 +203,22 @@ export default function ParticipantsList({
                             </p>
                             {hasAssignments ? (
                                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 mt-4">
-                                    <Button
-                                        type="button"
-                                        onClick={() => {
-                                            const nextVisibility = !showAssignments;
-                                            setPendingVisibility(nextVisibility);
-                                            setConfirmDialogOpen(true);
-                                        }}
-                                        className="flex h-10 w-full items-center justify-center gap-2 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] sm:w-auto"
-                                    >
+                                    <Button size={"sm"} variant={"outline"} onClick={() => {
+                                        const nextVisibility = !showAssignments;
+                                        setPendingVisibility(nextVisibility);
+                                        setConfirmDialogOpen(true);
+                                    }}>
                                         {showAssignments ? <EyeOff className="h-4 w-4"/> : <Eye className="h-4 w-4"/>}
                                         {showAssignments ? "Verberg lootjes" : "Toon lootjes"}
                                     </Button>
-                                    {!canEdit ? (
-                                        <Button
-                                            type="button"
-                                            onClick={handleExportToExcel}
-                                            disabled={isExporting}
-                                            className="flex h-10 w-full items-center justify-center gap-2 border-4 border-black bg-green-400 font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-green-300 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)] sm:w-auto"
-                                        >
-                                            {isExporting ? <Loader2 className="h-4 w-4 animate-spin"/> :
-                                                <Download className="h-4 w-4"/>}
-                                            {isExporting ? "Bezig..." : "Exporteer lootjes"}
+                                    {!canEdit && (
+                                        <Button size={"sm"} variant={"success"} onClick={handleExportToExcel}
+                                                disabled={isExporting}>
+                                            {isExporting ? <Loader2 className="animate-spin"/> :
+                                                <Download/>}
+                                            Exporteer lootjes
                                         </Button>
-                                    ) : null}
+                                    )}
                                 </div>
                             ) : null}
                         </div>
@@ -244,13 +240,8 @@ export default function ParticipantsList({
                                     className="h-12 w-full border-4 border-black bg-white text-base font-semibold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] focus-visible:ring-0"
                                 />
                             </div>
-                            <Button
-                                type="submit"
-                                disabled={isAdding}
-                                className="h-12 gap-2 border-4 border-black bg-black font-black uppercase text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-gray-900 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] lg:w-auto"
-                            >
-                                {isAdding ? <Loader2 className="mr-1 h-5 w-5 animate-spin"/> :
-                                    <UserPlus2 className="mr-1 h-5 w-5"/>}
+                            <Button disabled={isAdding} type={"submit"}>
+                                {isAdding ? <Loader2 className={"animate-spin"}/> : <UserPlus2/>}
                                 Toevoegen
                             </Button>
                             {formError ? <p className="text-sm font-semibold text-red-600">{formError}</p> : null}
@@ -289,25 +280,20 @@ export default function ParticipantsList({
                                             exit={{opacity: 0, y: -16, scale: 0.95}}
                                             transition={{duration: 0.25}}
                                             className={cn(
-                                                "relative border-4 border-black px-6 py-5 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-colors duration-200",
+                                                "relative border-4 border-black px-4 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-colors duration-200",
                                                 canEdit
                                                     ? "bg-yellow-200"
                                                     : (participant.viewedAt ? "bg-green-300" : "bg-blue-300")
                                             )}
                                         >
                                             {canEdit ? (
-                                                <Button
-                                                    type="button"
-                                                    onClick={() => handleRemove(participant.id)}
-                                                    disabled={!canEdit || (isRemoving && removingId === participant.id)}
-                                                    title="Verwijder deelnemer"
-                                                    className="absolute right-3 top-3 h-10 w-10 border-4 border-black bg-red-600 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-red-700 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
-                                                >
-                                                    {isRemoving && removingId === participant.id ? (
-                                                        <Loader2 className="h-4 w-4 animate-spin"/>
-                                                    ) : (
-                                                        <Trash2 className="h-4 w-4"/>
-                                                    )}
+                                                <Button variant={"destructive"} title="Verwijder deelnemer"
+                                                        size={"sm"}
+                                                        onClick={() => handleRemove(participant.id)}
+                                                        className={"absolute right-4 top-3"}
+                                                        disabled={!canEdit || (isRemoving && removingId === participant.id)}>
+                                                    {isRemoving && removingId === participant.id ?
+                                                        <Loader2 className="animate-spin"/> : <Trash2/>}
                                                 </Button>
                                             ) : null}
 
@@ -326,14 +312,14 @@ export default function ParticipantsList({
                                                     </div>
                                                     <div className="flex-1 space-y-1">
                                                         <div className={"flex flex-col flex-wrap"}>
-                                                        <p className="text-2xl font-black uppercase tracking-tight">{participant.name}</p>
+                                                            <p className="text-2xl font-black uppercase tracking-tight">{participant.name}</p>
 
-                                                        {participant.viewedAt != null && (<Badge
-                                                            variant={"success"}
-                                                            size={"small"}
-                                                        >
-                                                            <CheckIcon/> Bekeken
-                                                        </Badge>)}
+                                                            {participant.viewedAt != null && (<Badge
+                                                                variant={"success"}
+                                                                size={"small"}
+                                                            >
+                                                                <CheckIcon/> Bekeken
+                                                            </Badge>)}
                                                         </div>
                                                         <AnimatePresence mode="wait" initial={false}>
                                                             {showAssignments ? (
@@ -369,27 +355,19 @@ export default function ParticipantsList({
                                                             Persoonlijke link
                                                         </p>
                                                         <div className="flex flex-col gap-2 sm:flex-row">
-                                                            <Button
-                                                                type="button"
-                                                                onClick={() => handleCopyShareLink(participant)}
-                                                                className="h-10 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
-                                                            >
-                                                                <Copy className="h-4 w-4"/>
-                                                                {copiedParticipantId === participant.id ? "Gekopieerd" : "Kopieer"}
+                                                            <Button size={"sm"} variant={"outline"}
+                                                                    onClick={() => handleCopyShareLink(participant)}>
+                                                                {copiedParticipantId === participant.id ? <CheckIcon/> :
+                                                                    <Copy/>}
+                                                                Kopieer
                                                             </Button>
-                                                            <Button
-                                                                asChild
-                                                                className="h-10 border-4 border-black bg-black font-black uppercase text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:text-black hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
-                                                            >
-                                                                <a
+                                                            <Button asChild size={"sm"}>
+                                                                <Link
                                                                     href={`/bekijk/${encodeURIComponent(participant.viewToken)}`}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="flex items-center gap-2"
-                                                                >
+                                                                    target={"_blank"} rel={"noopener noreferrer"}>
                                                                     <ExternalLink className="h-4 w-4"/>
                                                                     Open link
-                                                                </a>
+                                                                </Link>
                                                             </Button>
                                                         </div>
                                                     </motion.div>
@@ -425,24 +403,15 @@ export default function ParticipantsList({
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            onClick={() => {
-                                setConfirmDialogOpen(false);
-                            }}
-                            className="h-10 border-4 border-black bg-white font-black uppercase text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
-                        >
+                        <Button size={"sm"} variant={"outline"} onClick={() => {
+                            setConfirmDialogOpen(false);
+                        }}>
                             Annuleer
                         </Button>
-                        <Button
-                            type="button"
-                            onClick={() => {
-                                setShowAssignments(pendingVisibility);
-                                setConfirmDialogOpen(false);
-                            }}
-                            className="h-10 border-4 border-black bg-black font-black uppercase text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-gray-900 hover:shadow-[1.5px_1.5px_0px_0px_rgba(0,0,0,1)]"
-                        >
+                        <Button variant={"success"} size={"sm"} onClick={() => {
+                            setShowAssignments(pendingVisibility);
+                            setConfirmDialogOpen(false);
+                        }}>
                             Bevestig
                         </Button>
                     </DialogFooter>

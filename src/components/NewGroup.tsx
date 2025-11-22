@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import {useState, useTransition} from "react";
+import {useRouter} from "next/navigation";
+import {Plus} from "lucide-react";
 import CreateGroupModal from "./CreateGroupModal";
-import { Button } from "./ui/button";
-import { createGroup } from "@/actions/groupsAction";
+import {createGroup} from "@/actions/groupsAction";
+import {Button} from "@/components/ui/button";
 
 type CreateGroupFormValues = {
     name: string;
@@ -41,15 +41,9 @@ export default function NewGroup() {
 
     return (
         <>
-            <Button
-                onClick={() => setShowCreateModal(true)}
-                size="lg"
-                className="bg-red-600 hover:bg-red-700 text-white font-black uppercase border-4 border-black h-16 px-8 text-lg transform hover:translate-x-1 hover:translate-y-1 transition-transform shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-                <Plus className="w-6 h-6 mr-2" />
-                Nieuwe trekking
+            <Button variant={"destructive"} size={"lg"} onClick={() => setShowCreateModal(true)}>
+                <Plus/> Nieuwe trekking
             </Button>
-
             <CreateGroupModal
                 open={showCreateModal}
                 onClose={(nextOpen) => {

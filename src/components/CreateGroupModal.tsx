@@ -3,10 +3,11 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Gift, Loader2 } from "lucide-react";
+import {Gift, Loader2, PlusIcon} from "lucide-react";
+import {Button} from "@/components/ui/button";
 
 export type CreateGroupFormData = {
     name: string;
@@ -41,7 +42,7 @@ export default function CreateGroupModal({ open, onClose, onSubmit, isLoading = 
                         <div className="w-12 h-12 border-4 border-white bg-red-600 flex items-center justify-center transform -rotate-6">
                             <Gift className="w-6 h-6 text-white" />
                         </div>
-                        <DialogTitle className="text-3xl font-black uppercase tracking-tight">Nieuwe trekking</DialogTitle>
+                        <DialogTitle className="text-3xl font-black uppercase tracking-tight text-white">Nieuwe trekking</DialogTitle>
                     </div>
                     <DialogDescription className="text-white/80 font-bold text-base">
                         Vul de gegevens in voor je nieuwe trekking.
@@ -63,29 +64,14 @@ export default function CreateGroupModal({ open, onClose, onSubmit, isLoading = 
                         />
                     </div>
 
-                    <div className="flex gap-4 pt-4">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => onClose(false)}
-                            disabled={isLoading}
-                            className="flex-1 border-4 border-black font-black uppercase h-14 hover:bg-black hover:text-white"
-                        >
+                    <div className="flex flex-col sm:flex-row gap-3 pt-4 *:sm:flex-1">
+                        <Button variant={"outline"} onClick={() => onClose(false)}
+                                disabled={isLoading}>
                             Annuleren
                         </Button>
-                        <Button
-                            type="submit"
-                            disabled={isLoading}
-                            className="flex-1 bg-red-600 hover:bg-red-700 text-white font-black uppercase border-4 border-black h-14 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                    ...
-                                </>
-                            ) : (
-                                'Maak Aan!'
-                            )}
+                        <Button variant={"destructive"}>
+                            Maak aan!
+                            {isLoading ? <Loader2 className={"animate-spin"}/> : <PlusIcon/> }
                         </Button>
                     </div>
                 </form>

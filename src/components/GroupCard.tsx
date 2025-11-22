@@ -3,7 +3,7 @@
 import {useState, useTransition} from "react";
 import {useRouter} from "next/navigation";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
+
 import {deleteGroup} from "@/actions/groupsAction";
 import {Users, ArrowRight, Trash2, Loader2, CheckIcon, Sparkles} from "lucide-react";
 import type {groups} from "@/db/schema/schema";
@@ -12,6 +12,7 @@ import DeleteGroupDialog from "@/components/DeleteGroupDialog";
 import Link from "next/link";
 import {cn} from "@/lib/utils";
 import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
 
 const colors = ['bg-red-600', 'bg-green-700', 'bg-white', 'bg-red-600'];
 const rotations = ['rotate-1', '-rotate-2', 'rotate-2', '-rotate-1'];
@@ -102,30 +103,17 @@ export default function GroupCard({group, participantCount = 0, index = 0}: Grou
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <Link
-                            href={`/trekking/${group.id}`}
-                            className={`flex h-14 flex-1 items-center justify-center gap-3 px-6 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-gray-900'} font-black uppercase border-4 border-black text-base shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all rounded-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-black/30`}
-                        >
-                            <span>Bekijk</span>
-                            <ArrowRight className="w-5 h-5"/>
-                        </Link>
-                        <Button
-                            type="button"
-                            onClick={() => {
-                                setDeleteError(null);
-                                setShowDeleteDialog(true);
-                            }}
-                            disabled={isDeleting}
-                            aria-label="Verwijder trekking"
-                            className={`h-14 w-14 min-w-14 border-4 border-black bg-red-600 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all ${isDeleting ? 'opacity-80' : 'hover:bg-red-700'}`}
-                        >
-                            {isDeleting ? (
-                                <Loader2 className="w-5 h-5 animate-spin"/>
-                            ) : (
-                                <Trash2 className="w-5 h-5"/>
-                            )}
-                            <span className="sr-only">Verwijder</span>
+                    <div className="flex items-center gap-3 ">
+                        <Button asChild variant={"outline"} className={"flex-1"}>
+                            <Link href={`/trekking/${group.id}`}>
+                                Bekijk <ArrowRight/>
+                            </Link>
+                        </Button>
+                        <Button onClick={() => {
+                            setDeleteError(null);
+                            setShowDeleteDialog(true);
+                        }} variant={"destructive"}>
+                            {isDeleting ? <Loader2 className="animate-spin"/> : <Trash2/>}
                         </Button>
                     </div>
                 </CardContent>

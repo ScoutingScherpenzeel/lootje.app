@@ -2,10 +2,10 @@
 
 import {useState} from "react"
 import {motion} from "motion/react"
-import {Button} from "@/components/ui/button"
 import {authClient} from "@/lib/auth-client"
-import {GiftIcon, LogOut, Snowflake, TreePine} from "lucide-react"
+import {GiftIcon, Loader2, LogOut, Snowflake, TreePine} from "lucide-react"
 import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
 
 type HeroProps = {
     name?: string | null;
@@ -50,14 +50,10 @@ export default function Hero({name}: HeroProps) {
             <div className="relative max-w-7xl mx-auto px-6 py-20">
                 {isLoggedIn ? (
                     <div className="pointer-events-auto absolute right-6 top-6">
-                        <Button
-                            type="button"
-                            onClick={handleSignOut}
-                            disabled={isSigningOut}
-                            className="inline-flex h-11 items-center gap-2 border-4 border-black bg-white px-4 font-black uppercase text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-yellow-100 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
-                        >
-                            <LogOut className="h-4 w-4"/>
-                            {isSigningOut ? "Bezig..." : "Uitloggen"}
+                        <Button variant={"outline"} size={"sm"} onClick={handleSignOut}
+                                disabled={isSigningOut}>
+                            {isSigningOut ? <Loader2 className={"animate-spin"}/> : <LogOut/>}
+                            Uitloggen
                         </Button>
                     </div>
                 ) : null}

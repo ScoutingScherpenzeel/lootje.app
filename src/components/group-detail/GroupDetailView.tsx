@@ -14,7 +14,7 @@ import {
     Sparkles,
     Users,
 } from "lucide-react";
-import {Button} from "@/components/ui/button";
+
 import ParticipantsList from "./ParticipantsList";
 import {
     addParticipant,
@@ -23,6 +23,7 @@ import {
     type GroupDetailPayload,
 } from "@/actions/groupDetailActions";
 import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
 
 type GroupDetailViewProps = GroupDetailPayload;
 
@@ -80,18 +81,12 @@ export default function GroupDetailView({group, participants}: GroupDetailViewPr
                     className="relative overflow-hidden border-8 border-red-500 bg-white px-8 py-10 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] -rotate-1 -translate-x-1 rounded-md"
                 >
 
-                    <div className="relative z-10 grid gap-8 lg:grid-cols-[auto_minmax(0,1fr)] lg:items-center">
-                        <Button
-                            asChild
-                            variant="ghost"
-                            className="h-12 border-4 border-black bg-black px-6 font-black uppercase text-white shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-white hover:text-black"
-                        >
+                    <div className="relative z-10 grid gap-8 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
+                        <Button asChild variant={"outline"}>
                             <Link href="/">
-                                <ArrowLeft className="mr-2 h-5 w-5"/>
-                                Terug
+                                <ArrowLeft/> Ga terug
                             </Link>
                         </Button>
-
                         <div className="flex flex-wrap items-center gap-3 justify-self-end">
                             <Badge>
                                 <Users/> {participantCount} {participantCount === 1 ? "deelnemer" : "deelnemers"}
@@ -185,21 +180,12 @@ export default function GroupDetailView({group, participants}: GroupDetailViewPr
                                                 Wij zorgen dat niemand zichzelf loot.
                                             </p>
                                         </div>
-                                        <Button
-                                            onClick={handleDrawGroup}
-                                            disabled={!canDraw || isDrawing}
-                                            className="h-14 w-full border-4 border-black bg-white text-lg font-black uppercase hover:text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all hover:bg-black text-black hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] disabled:cursor-not-allowed disabled:opacity-70"
-                                        >
+                                        <Button onClick={handleDrawGroup} size={"lg"} variant={"outline"}
+                                                disabled={!canDraw || isDrawing} className={"w-full"}>
                                             {isDrawing ? (
-                                                <>
-                                                    <Loader2 className="mr-2 h-5 w-5 animate-spin"/>
-                                                    Bezig...
-                                                </>
+                                                <><Loader2 className="animate-spin"/>Bezig...</>
                                             ) : (
-                                                <>
-                                                    <Shuffle className="mr-2 h-5 w-5"/>
-                                                    Trek lootjes nu
-                                                </>
+                                                <><Shuffle/>Trek lootjes nu</>
                                             )}
                                         </Button>
                                         {drawError ?

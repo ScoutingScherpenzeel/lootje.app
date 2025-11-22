@@ -4,8 +4,9 @@ import {useState} from "react";
 import Snowfall from "react-snowfall";
 import {AnimatePresence, motion} from "motion/react";
 import {AlertCircle, Lock, Sparkles, Unlock} from "lucide-react";
-import {Button} from "@/components/ui/button";
+
 import {markParticipantAsViewed} from "@/actions/groupDetailActions";
+import {Button} from "@/components/ui/button";
 
 export type ParticipantRevealViewProps =
     | { status: "invalid" }

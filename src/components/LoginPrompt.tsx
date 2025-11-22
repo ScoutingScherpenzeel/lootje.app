@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
-import { Button } from "@/components/ui/button";
+
 import { cn } from "@/lib/utils";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
+import {Button} from "@/components/ui/button";
 
 type LoginMethod = {
   provider: string;
