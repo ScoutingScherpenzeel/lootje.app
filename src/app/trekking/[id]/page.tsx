@@ -5,9 +5,9 @@ import GroupDetailView from "@/components/group-detail/GroupDetailView";
 import { getGroupDetail } from "@/actions/groupDetailActions";
 
 type PageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export default async function Page({ params }: PageProps) {
@@ -21,10 +21,7 @@ export default async function Page({ params }: PageProps) {
 
   const { id } = await params;
 
-  console.log("Fetching details for group ID:", id);
-
   const detail = await getGroupDetail(id);
-
   if (!detail) {
     notFound();
   }

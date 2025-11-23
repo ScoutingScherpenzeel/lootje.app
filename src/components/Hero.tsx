@@ -15,11 +15,8 @@ export default function Hero({ name }: HeroProps) {
   const isLoggedIn = Boolean(name);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
-  const handleSignOut = async () => {
-    if (isSigningOut) {
-      return;
-    }
-
+  async function handleSignOut() {
+    if (isSigningOut) return;
     setIsSigningOut(true);
 
     try {
@@ -29,7 +26,7 @@ export default function Hero({ name }: HeroProps) {
       console.error("Failed to sign out", error);
       setIsSigningOut(false);
     }
-  };
+  }
 
   return (
     <div className="relative overflow-hidden border-b-8 border-black bg-yellow-400 text-black shadow-[0_12px_0_0_rgba(0,0,0,1)]">
