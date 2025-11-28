@@ -82,33 +82,34 @@ export default function GroupDetailView({
           transition={{ duration: 0.3 }}
           className="relative -translate-x-1 -rotate-1 overflow-hidden rounded-md border-8 border-red-500 bg-white px-8 py-10 shadow-[16px_16px_0px_0px_rgba(0,0,0,1)]"
         >
-          <div className="relative z-10 grid gap-8 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
-            <Button asChild variant={"outline"}>
-              <Link href="/">
-                <ArrowLeft /> Ga terug
-              </Link>
-            </Button>
-            <div className="flex flex-wrap items-center gap-3 justify-self-end">
-              <Badge>
-                <Users /> {participantCount}{" "}
-                {participantCount === 1 ? "deelnemer" : "deelnemers"}
-              </Badge>
-              <Badge variant={group.isDrawn ? "success" : "outline"}>
-                <Sparkles /> {group.isDrawn ? "Geloot" : "Nog niet geloot"}
-              </Badge>
-              {group.isDrawn ? (
-                <Badge variant="outline">
-                  <CalendarDays /> Datum trekking:{" "}
-                  {group.drawnAt?.toLocaleDateString("nl-NL")}
+          <div className="relative z-10 flex flex-col gap-12">
+            <div className={"flex flex-wrap justify-between gap-4"}>
+              <Button asChild variant={"outline"} className={"w-full md:w-fit"}>
+                <Link href="/">
+                  <ArrowLeft /> Ga terug
+                </Link>
+              </Button>
+              <div className="flex flex-wrap items-center gap-3 justify-self-end">
+                <Badge>
+                  <Users /> {participantCount}{" "}
+                  {participantCount === 1 ? "deelnemer" : "deelnemers"}
                 </Badge>
-              ) : null}
+                <Badge variant={group.isDrawn ? "success" : "outline"}>
+                  <Sparkles /> {group.isDrawn ? "Geloot" : "Nog niet geloot"}
+                </Badge>
+                {group.isDrawn ? (
+                  <Badge variant="outline">
+                    <CalendarDays /> Datum trekking:{" "}
+                    {group.drawnAt?.toLocaleDateString("nl-NL")}
+                  </Badge>
+                ) : null}
+              </div>
             </div>
-
             <div className="lg:col-span-2">
               <Badge variant={"yellow"} size={"large"}>
                 Trekking
               </Badge>
-              <h2 className="mt-4">{group.name}</h2>
+              <h2 className="mt-4 wrap-break-word">{group.name}</h2>
             </div>
           </div>
         </motion.section>

@@ -381,7 +381,7 @@ export default function ParticipantsList({
                           </div>
                           <div className="flex-1 space-y-1">
                             <div className={"flex flex-col flex-wrap"}>
-                              <p className="text-2xl font-black tracking-tight uppercase">
+                              <p className="text-2xl font-black tracking-tight break-all uppercase">
                                 {participant.name}
                               </p>
 
