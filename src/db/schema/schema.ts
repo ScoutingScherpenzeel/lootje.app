@@ -1,6 +1,14 @@
-import { pgTable, uuid, varchar, timestamp, boolean, text, AnyPgColumn } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { user } from './auth-schema';
+import {
+  pgTable,
+  uuid,
+  varchar,
+  timestamp,
+  boolean,
+  text,
+  AnyPgColumn,
+} from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { user } from "./auth-schema";
 
 /**
  * A group of participants for one “lootjes trekken” round.
@@ -31,11 +39,11 @@ export const groups = pgTable("groups", {
 });
 
 export const groupsRelations = relations(groups, ({ one, many }) => ({
-	participants: many(participants),
-	owner: one(user, {
-		fields: [groups.ownerId],
-		references: [user.id]
-	})
+  participants: many(participants),
+  owner: one(user, {
+    fields: [groups.ownerId],
+    references: [user.id],
+  }),
 }));
 
 /**
@@ -43,46 +51,56 @@ export const groupsRelations = relations(groups, ({ one, many }) => ({
  * Only a name is required.
  * Each participant gets a secret URL token to see their drawn person.
  */
-export const participants = pgTable('participants', {
-	id: uuid('id').primaryKey().defaultRandom(),
+export const participants = pgTable("participants", {
+  id: uuid("id").primaryKey().defaultRandom(),
 
-	groupId: uuid("group_id")
-		.notNull()
-		.references(() => groups.id, { onDelete: 'cascade' }),
+  groupId: uuid("group_id")
+    .notNull()
+    .references(() => groups.id, { onDelete: "cascade" }),
 
-	// Display name, entered by organizer
-	name: varchar('name', { length: 255 }).notNull(),
+  // Display name, entered by organizer
+  name: varchar("name", { length: 255 }).notNull(),
 
-	// Secret token used in the participant URL
-	viewToken: varchar('view_token', { length: 32 }).notNull().unique(),
+  // Secret token used in the participant URL
+  viewToken: varchar("view_token", { length: 32 }).notNull().unique(),
 
-    viewedAt: timestamp('viewed_at', { withTimezone: true }),
+  viewedAt: timestamp("viewed_at", { withTimezone: true }),
 
-	/**
-	 * The participant this person has drawn.
-	 * Filled after the organizer triggers the draw.
-	 * Nullable until the draw is performed.
-	 */
-	assignedParticipantId: uuid('assigned_participant_id').references((): AnyPgColumn => participants.id, {
-		onDelete: 'set null'
-	}),
+  /**
+   * The participant this person has drawn.
+   * Filled after the organizer triggers the draw.
+   * Nullable until the draw is performed.
+   */
+  assignedParticipantId: uuid("assigned_participant_id").references(
+    (): AnyPgColumn => participants.id,
+    {
+      onDelete: "set null",
+    },
+  ),
 
-	createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-	updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 // Define relations after participants is declared
-export const participantsRelations = relations(participants, ({ one, many }) => ({
-	group: one(groups, {
-		fields: [participants.groupId],
-		references: [groups.id]
-	}),
-	assignedParticipant: one(participants, {
-		fields: [participants.assignedParticipantId],
-		references: [participants.id]
-	}),
-	// Reverse relation: all people who drew this participant
-	drawnBy: many(participants, {
-		relationName: 'assignedParticipant'
-	})
-}));
+export const participantsRelations = relations(
+  participants,
+  ({ one, many }) => ({
+    group: one(groups, {
+      fields: [participants.groupId],
+      references: [groups.id],
+    }),
+    assignedParticipant: one(participants, {
+      fields: [participants.assignedParticipantId],
+      references: [participants.id],
+    }),
+    // Reverse relation: all people who drew this participant
+    drawnBy: many(participants, {
+      relationName: "assignedParticipant",
+    }),
+  }),
+);

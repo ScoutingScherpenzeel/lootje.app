@@ -1,5 +1,5 @@
-'use client'
+"use client";
 
-import Snowfall from 'react-snowfall'
+import Snowfall from "react-snowfall";
 
-export default Snowfall
+export default Snowfall;
